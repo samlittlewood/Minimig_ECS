@@ -11,7 +11,7 @@ FLASH_CHIP = is25lp128f
 
 # ******* design files *******
 # current boards v3.0.3 v2.1.2
-CONSTRAINTS = ../../constraints/ulx3s_v20.lpf
+CONSTRAINTS = ../../constraints/ulx3s_v20_ps2kbd.lpf
 # first ULX3S prototypes v1.7 boards with patched ESP32 connection
 #CONSTRAINTS = ../../constraints/ulx3s_v17p.lpf
 

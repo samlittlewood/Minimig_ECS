@@ -67,6 +67,9 @@ port
   -- SHUTDOWN: logic '1' here will shutdown power on PCB >= v1.7.5
   shutdown: out std_logic := '0';
 
+  -- PROGRAMN: logic '0' will jump to next multiboot image
+  user_programn: out std_logic := '1';
+
   -- Audio jack 3.5mm
   audio_l, audio_r, audio_v: inout std_logic_vector(3 downto 0) := (others => 'Z');
 
@@ -224,14 +227,28 @@ architecture struct of amiga_ulx3s is
         signal S_report_decoded: T_report_decoded;
 	-- end emard usb hid joystick
 
+        signal R_program: std_logic_vector(22 downto 0);
+
 begin
   wifi_gpio0 <= btn(0); -- holding reset for 2 sec will activate ESP32 loader
-  led(0) <= btn(0); -- visual indication of btn press
+  -- led(0) <= btn(0); -- visual indication of btn press
   -- btn(0) has inverted logic
   sys_reset <= btn(0);
   s_hid_reset <= not btn(0);
   sd_dat1_irq <= '1';
   sd_dat2 <= '1';
+  
+  process(clk7m)
+  begin
+    if rising_edge(clk7m) then
+      if btn(0) = '0' then
+        R_program <= R_program + 1;
+      else
+        R_program <= (others => '0');
+      end if;
+    end if;
+  end process;
+  user_programn <= not R_program(R_program'high);
 
   -- Housekeeping logic for unwanted peripherals on FleaFPGA Ohm board goes here..
   -- (Note: comment out any of the following code lines if peripheral is required)
@@ -291,6 +308,12 @@ begin
   process(clk7m)
   begin
     if rising_edge(clk7m) then
+      n_joy1(5) <= not (btn(2)); -- fire2
+      n_joy1(4) <= not (btn(1)); -- fire
+      --n_joy1(3) <= not (S_report_decoded.rmouseq_y(0));       -- LSB quadrature y
+      --n_joy1(2) <= not (S_report_decoded.rmouseq_x(0));       -- LSB quadrature x
+      --n_joy1(1) <= not (S_report_decoded.rmouseq_y(1));       -- MSB quadrature y
+      --n_joy1(0) <= not (S_report_decoded.rmouseq_x(1));       -- MSB quadrature x
       -- Joystick2 port used as joystick (left stick, keys abxy, right trigger/bumper)
       -- Joystick2 bits(5-0) = fire2,fire,right,left,down,up mapped to GPIO header
       -- inverted logic: joystick switches pull down when pressed
