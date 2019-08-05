@@ -104,16 +104,16 @@ end;
 architecture struct of amiga_ulx3s is
 	-- FLEA OHM aliasing
 	-- keyboard
-	alias ps2_clk1 : std_logic is usb_fpga_dp;
-	alias ps2_data1 : std_logic is usb_fpga_dn;
-	--alias ps2_clk1 : std_logic is gp(0);
-	--alias ps2_data1 : std_logic is gn(0);
+	--alias ps2_clk1 : std_logic is usb_fpga_dp;
+	--alias ps2_data1 : std_logic is usb_fpga_dn;
+	alias ps2_clk1 : std_logic is gp(3);
+	alias ps2_data1 : std_logic is gp(2);
 	--signal ps2_clk1 : std_logic := '1';
 	--signal ps2_data1 : std_logic := '1';
 	signal PS_enable: std_logic; -- dummy on ulx3s v1.7.x
         -- mouse
 	alias ps2_clk2 : std_logic is gp(1);
-	alias ps2_data2 : std_logic is gn(1);
+	alias ps2_data2 : std_logic is gp(0);
 	--signal ps2_clk2 : std_logic := '1';
 	--signal ps2_data2 : std_logic := '1';
 
